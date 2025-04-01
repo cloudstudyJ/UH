@@ -20,9 +20,6 @@ file(
     ${CMAKE_CURRENT_SOURCE_DIR}/sources/*.cpp
 )
 
-message(STATUS "Files:")
-message(STATUS ${SRC_FILES})
-
 add_executable(
     ${PROJECT_NAME}
 
