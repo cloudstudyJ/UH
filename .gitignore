@@ -1,0 +1,13 @@
+.vscode/
+build/
+libs/
+resources/
+
+*.bat
+*.exe
+*.dll
+*.lib
+*.a
+*.spv
+
+!builder.bat
