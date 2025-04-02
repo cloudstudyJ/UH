@@ -14,12 +14,14 @@ namespace UH {
 
         public:
             Window();
+            Window(uint32 width, uint32 height, const char* title);
             ~Window() noexcept;
 
             explicit operator bool() const noexcept;
             operator GLFWwindow*() const noexcept;
 
-            void create(uint32 width, uint32 height, const char* title);
+            bool create(uint32 width, uint32 height, const char* title);
+            void destroy();
 
         private:
             bool mIsCreated = { };

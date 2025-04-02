@@ -1,5 +1,7 @@
 #pragma once
 
+#include "window.hpp"
+
 namespace UH {
     class Engine {
         Engine(const Engine&) = delete;
@@ -14,5 +16,8 @@ namespace UH {
 
             void run();
             void shutdown();
+
+        private:
+            UH::Window mMainWindow;
     };
 }

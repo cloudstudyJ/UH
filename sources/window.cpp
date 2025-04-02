@@ -13,7 +13,8 @@ bool UH::Window::isGlfwInitialized = { };
 
 /* ------------ Constructor & Destructor ----------- */
 UH::Window::Window() { }
-UH::Window::~Window() noexcept { glfwDestroyWindow(mHandle); }
+UH::Window::Window(uint32 width, uint32 height, const char* title) { create(width, height, title); }
+UH::Window::~Window() noexcept { destroy(); }
 /* ------------------------------------------------- */
 
 /* ------------- Operator Overloading -------------- */
@@ -22,7 +23,7 @@ UH::Window::operator GLFWwindow*() const noexcept { return mHandle;    }
 /* ------------------------------------------------- */
 
 /* ----------------- Member Func ------------------- */
-void UH::Window::create(uint32 width, uint32 height, const char* title) {
+bool UH::Window::create(uint32 width, uint32 height, const char* title) {
     if (!isGlfwInitialized) {
         if (glfwInit() != GLFW_TRUE)
             throw std::runtime_error("Failed to init glfw!");
@@ -39,6 +40,15 @@ void UH::Window::create(uint32 width, uint32 height, const char* title) {
             throw std::runtime_error("Failed to create window!");
 
         mIsCreated = true;
+    }
+
+    return mIsCreated;
+}
+void UH::Window::destroy() {
+    if (mIsCreated) {
+        glfwDestroyWindow(mHandle);
+
+        mIsCreated = false;
     }
 }
 /* ------------------------------------------------- */

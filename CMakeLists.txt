@@ -5,7 +5,7 @@
 # compiler: mingw-w64 13.2.0 (x86_64-posix-seh-rev1)
 
 cmake_minimum_required(VERSION 3.11)
-project(test)
+project(UH)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
