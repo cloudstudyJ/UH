@@ -1,12 +1,16 @@
 #include "core/instance.hpp"
-#include "settings.hpp"
+#include "settings/presetFactory.hpp"
 
 #include <iostream>
 #include <vector>
 #include "vulkan/vulkan.h"
-#include "glfw3.h"
+#include "glfw3.h"          // glfwGetRequiredInstanceExtensions()
 
 /* --------------------- Func ---------------------- */
+/**
+ * Return
+ *   glfw가 지원하는 vulkan extension list 반환
+ */
 std::vector<const char*> loadGlfwExtensions() {
     uint32 glfwExtensionCount = { };
     const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
@@ -80,22 +84,29 @@ UH::Instance::operator VkInstance_T*() const noexcept { return mHandle;    }
 /* ------------------------------------------------- */
 
 /* ----------------- Member Func ------------------- */
-bool UH::Instance::create(const UH::Settings::App& appSettings) {
+/**
+ * Return
+ *   vulkan instance 생성 성공 시 true  반환
+ *   vulkan instance 생성 실패 시 false 반환
+ */
+bool UH::Instance::create(UH::Preset::App appPreset) {
     if (!mIsCreated) {
+        UH::Config::App appConfig = UH::Factory::Preset::app(appPreset);
+
 #ifdef DEBUG
         std::cout << "[DEBUG] application settings" << std::endl;
-        std::cout << "  App name: " << appSettings.APP_NAME << std::endl;
-        std::cout << "  App ver: " << appSettings.APP_VER << std::endl;
-        std::cout << "  Engine name: " << appSettings.ENGINE_NAME << std::endl;
-        std::cout << "  Engine ver: " << appSettings.ENGINE_VER << std::endl;
+        std::cout << "  App name:    " << appConfig.appName    << std::endl;
+        std::cout << "  App ver:     " << appConfig.appVer     << std::endl;
+        std::cout << "  Engine name: " << appConfig.engineName << std::endl;
+        std::cout << "  Engine ver:  " << appConfig.engineVer  << std::endl;
 #endif
         VkApplicationInfo appInfo {
             .sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO,
-            .pApplicationName   = appSettings.APP_NAME,
-            .applicationVersion = appSettings.APP_VER,
-            .pEngineName        = appSettings.ENGINE_NAME,
-            .engineVersion      = appSettings.ENGINE_VER,
-            .apiVersion         = appSettings.VULKAN_API_VER
+            .pApplicationName   = appConfig.appName,
+            .applicationVersion = appConfig.appVer,
+            .pEngineName        = appConfig.engineName,
+            .engineVersion      = appConfig.engineVer,
+            .apiVersion         = appConfig.vulkanAPI
         };
 
         std::vector<const char*> glfwExtensions = loadGlfwExtensions();
@@ -140,9 +151,13 @@ bool UH::Instance::create(const UH::Settings::App& appSettings) {
 #endif
 
         mIsCreated = true;
+        return true;
     }
 
-    return mIsCreated;
+#ifdef DEBUG
+    std::cout << "[WARNING]: Vulkan instance is already created!" << std::endl;
+#endif
+    return false;
 }
 void UH::Instance::destroy() {
     if (mIsCreated) {

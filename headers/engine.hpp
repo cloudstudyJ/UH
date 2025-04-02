@@ -1,6 +1,8 @@
 #pragma once
 
+#include "settings/preset.hpp"
 #include "window.hpp"
+#include "core/device.hpp"
 
 namespace UH {
     class Engine {
@@ -14,10 +16,11 @@ namespace UH {
             Engine();
             ~Engine() noexcept;
 
-            void run();
+            void run(UH::Preset::App appPreset);
             void shutdown();
 
         private:
             UH::Window mMainWindow;
+            UH::Device mDevice;
     };
 }

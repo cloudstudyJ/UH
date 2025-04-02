@@ -1,6 +1,6 @@
 #pragma once
 
-#include "types.hpp"
+#include "utilities/types.hpp"
 
 struct GLFWwindow;
 
@@ -18,7 +18,7 @@ namespace UH {
             ~Window() noexcept;
 
             explicit operator bool() const noexcept;
-            operator GLFWwindow*() const noexcept;
+            operator   GLFWwindow*() const noexcept;
 
             bool create(uint32 width, uint32 height, const char* title);
             void destroy();

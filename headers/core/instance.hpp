@@ -1,6 +1,6 @@
 #pragma once
 
-#include "types.hpp"
+#include "settings/preset.hpp"
 
 struct VkInstance_T;
 #ifdef DEBUG
@@ -8,8 +8,6 @@ struct VkDebugUtilsMessengerEXT_T;
 #endif
 
 namespace UH {
-    namespace Settings { struct App; };
-
     /**
      * Instance class is singleton
      */
@@ -26,7 +24,7 @@ namespace UH {
             explicit operator bool() const noexcept;
             operator VkInstance_T*() const noexcept;
 
-            bool create(const UH::Settings::App& appSettings);
+            bool create(UH::Preset::App appPreset);
             void destroy();
 
         private:
