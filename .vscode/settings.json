@@ -3,6 +3,8 @@
         "*.rgen": "glsl",
         "*.rmiss": "glsl",
         "*.rahit": "glsl",
-        "*.rchit": "glsl"
+        "*.rchit": "glsl",
+        "*.hpp": "cpp",
+        "*.cpp": "cpp"
     }
 }

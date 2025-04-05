@@ -4,7 +4,9 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/headers",
+                "${workspaceFolder}/libs",
                 "${workspaceFolder}/libs/glfw",
+                "${workspaceFolder}/libs/imgui",
                 "${env:VULKAN_SDK}/Include"
             ],
             "defines": [

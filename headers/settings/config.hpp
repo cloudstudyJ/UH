@@ -13,7 +13,8 @@ namespace UH {
         };
 
         struct Device {
-            const char* const* extensions = { };
+            const char* const* extensions      = { };
+                       uint64  extensionsCount = { };
         };
     }
 }

@@ -1,10 +1,11 @@
 #include "core/instance.hpp"
 #include "settings/presetFactory.hpp"
+#include "utilities/error.hpp"
 
 #include <iostream>
 #include <vector>
 #include "vulkan/vulkan.h"
-#include "glfw3.h"          // glfwGetRequiredInstanceExtensions()
+#include "glfw/glfw3.h"          // glfwGetRequiredInstanceExtensions()
 
 /* --------------------- Func ---------------------- */
 /**
@@ -15,12 +16,15 @@ std::vector<const char*> loadGlfwExtensions() {
     uint32 glfwExtensionCount = { };
     const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
-    if ((glfwExtensionCount == 0) or (glfwExtensions == nullptr))
-        throw std::runtime_error("Failed to get glfw vulkan extensions!");
+    bool extensionsLoaded = (!glfwExtensions or (glfwExtensionCount == 0));
+
+    UH_CHECK_LOG(extensionsLoaded, logType::WARNING, "Failed to get glfw vulkan extensions!"  );
+    UH_CHECK_LOG(extensionsLoaded, logType::WARNING, "Only off-screen rendering is available.");
 
     std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
 #ifdef DEBUG
+    // TODO: debug message
     std::cout << "[DEBUG] glfw vulkan extension list" << std::endl;
 
     for (uint32 i = 0; i < extensions.size(); ++i)
@@ -31,10 +35,12 @@ std::vector<const char*> loadGlfwExtensions() {
 }
 #ifdef DEBUG
 void destroyDebugMessenger(VkInstance_T* handle, VkDebugUtilsMessengerEXT_T* messenger) {
+    // TODO: load dynamic functions separately
     ((PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(handle, "vkDestroyDebugUtilsMessengerEXT"))
     (handle, messenger, nullptr);
 }
-uint32 __attribute__((__stdcall__)) debugCallback(
+// TODO: debug message
+uint32 __stdcall debugCallback(
           VkDebugUtilsMessageSeverityFlagBitsEXT severity    , uint32 type,
     const VkDebugUtilsMessengerCallbackDataEXT*  callbackData, void*  userData
 ) {
@@ -91,9 +97,10 @@ UH::Instance::operator VkInstance_T*() const noexcept { return mHandle;    }
  */
 bool UH::Instance::create(UH::Preset::App appPreset) {
     if (!mIsCreated) {
-        UH::Config::App appConfig = UH::Factory::Preset::app(appPreset);
+        UH::Config::App appConfig = UH::Factory::appConfig(appPreset);
 
 #ifdef DEBUG
+        // TODO: debug message
         std::cout << "[DEBUG] application settings" << std::endl;
         std::cout << "  App name:    " << appConfig.appName    << std::endl;
         std::cout << "  App ver:     " << appConfig.appVer     << std::endl;
@@ -112,6 +119,7 @@ bool UH::Instance::create(UH::Preset::App appPreset) {
         std::vector<const char*> glfwExtensions = loadGlfwExtensions();
 #ifdef DEBUG
         glfwExtensions.push_back("VK_EXT_debug_utils");
+        // TODO: debug message
         std::cout << "  " << glfwExtensions.size() << ": VK_EXT_debug_utils" << std::endl;
 
         std::vector<const char*> layers = { "VK_LAYER_KHRONOS_validation" };
@@ -140,13 +148,13 @@ bool UH::Instance::create(UH::Preset::App appPreset) {
             .ppEnabledExtensionNames = glfwExtensions.data()
         };
 
-        if (vkCreateInstance(&instanceInfo, nullptr, &mHandle) != VK_SUCCESS)
-            throw std::runtime_error("Failed to create vulkan instance!");
+        UH_CHECK_THROW(vkCreateInstance(&instanceInfo, nullptr, &mHandle), throwType::RUNTIME, "Failed to create vulkan instance!");
 
 #ifdef DEBUG
+        // TODO: load dynamic functions separately
         auto createDebugMessenger = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(mHandle, "vkCreateDebugUtilsMessengerEXT");
 
-        if ((createDebugMessenger == nullptr) or (createDebugMessenger(mHandle, &debugInfo, nullptr, &mDebugMessenger) != VK_SUCCESS))
+        if (!createDebugMessenger or (createDebugMessenger(mHandle, &debugInfo, nullptr, &mDebugMessenger) != VK_SUCCESS))
             throw std::runtime_error("Failed to create debug messenger!");
 #endif
 
@@ -155,7 +163,7 @@ bool UH::Instance::create(UH::Preset::App appPreset) {
     }
 
 #ifdef DEBUG
-    std::cout << "[WARNING]: Vulkan instance is already created!" << std::endl;
+    UH_LOG(logType::WARNING, "Vulkan instance is already created!");
 #endif
     return false;
 }

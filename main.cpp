@@ -5,8 +5,11 @@
 int main() {
     UH::Engine engine;
 
-    try { engine.run(UH::Preset::App::DEV); }
-    catch (const std::exception& e) { std::cerr << "[ERROR]:" << e.what() << std::endl; }
+    try {
+        engine.init();
+        engine.run(UH::Preset::App::DEV);
+    }
+    catch (const std::exception& e) { }
 
     engine.shutdown();
     return 0;

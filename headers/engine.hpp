@@ -16,6 +16,7 @@ namespace UH {
             Engine();
             ~Engine() noexcept;
 
+            void init();
             void run(UH::Preset::App appPreset);
             void shutdown();
 

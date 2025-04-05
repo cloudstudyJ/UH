@@ -5,9 +5,7 @@
 
 namespace UH {
     namespace Factory {
-        namespace Preset {
-            UH::Config::App    app   (UH::Preset::App    appPreset   );
-            UH::Config::Device device(UH::Preset::Device devicePreset);
-        }
+        UH::Config::App       appConfig(UH::Preset::App       appPreset);
+        UH::Config::Device deviceConfig(UH::Preset::Device devicePreset);
     }
 }

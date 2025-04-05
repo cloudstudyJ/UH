@@ -3,6 +3,7 @@
 #include "utilities/types.hpp"
 
 struct GLFWwindow;
+struct VkSurfaceKHR_T;
 
 namespace UH {
     class Window {
@@ -26,8 +27,7 @@ namespace UH {
         private:
             bool mIsCreated = { };
 
-            GLFWwindow* mHandle = { };
-
-            static bool isGlfwInitialized;
+            GLFWwindow*     mWindowHandle  = { };
+            VkSurfaceKHR_T* mSurfaceHandle = { };
     };
 }

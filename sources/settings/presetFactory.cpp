@@ -1,39 +1,40 @@
 #include "settings/presetFactory.hpp"
 #include "settings/presetData.hpp"
 
+template <typename T, uint64 Size>
+uint64 arrSize(T (&arr)[Size]) { return Size; }
+
 /**
  * Return
  *   지정한 preset에 맞게 App 생성에 필요한 정보 반환
  */
-UH::Config::App UH::Factory::Preset::app(UH::Preset::App appPreset) {
-    UH::Config::App appConfig;
+UH::Config::App UH::Factory::appConfig(UH::Preset::App appPreset) {
+    using namespace UH;
 
+    Config::App appConfig;
     switch (appPreset) {
-        case UH::Preset::App::DEV: {
+        case Preset::App::DEV: {
             appConfig = {
-                .appName    = UH::PresetData::App::DEV.APP_NAME,
-                .appVer     = UH::PresetData::App::DEV.APP_VER,
-                .engineName = UH::PresetData::App::ENGINE_NAME,
-                .engineVer  = UH::PresetData::App::DEV.ENGINE_VER,
-                .vulkanAPI  = UH::PresetData::App::VULKAN_API_VER
+                .appName    = PresetData::App::DEV.APP_NAME,
+                .appVer     = PresetData::App::DEV.APP_VER,
+                .engineName = PresetData::App::ENGINE_NAME,
+                .engineVer  = PresetData::App::DEV.ENGINE_VER,
+                .vulkanAPI  = PresetData::App::VULKAN_API_VER
             };
-
             break;
         }
-        case UH::Preset::App::RELEASE: {
+        case Preset::App::RELEASE: {
             appConfig = {
-                .appName    = UH::PresetData::App::RELEASE.APP_NAME,
-                .appVer     = UH::PresetData::App::RELEASE.APP_VER,
-                .engineName = UH::PresetData::App::ENGINE_NAME,
-                .engineVer  = UH::PresetData::App::RELEASE.ENGINE_VER,
-                .vulkanAPI  = UH::PresetData::App::VULKAN_API_VER
+                .appName    = PresetData::App::RELEASE.APP_NAME,
+                .appVer     = PresetData::App::RELEASE.APP_VER,
+                .engineName = PresetData::App::ENGINE_NAME,
+                .engineVer  = PresetData::App::RELEASE.ENGINE_VER,
+                .vulkanAPI  = PresetData::App::VULKAN_API_VER
             };
-
             break;
         }
 
-        default:
-            break;
+        default: break;
     }
 
     return appConfig;
@@ -42,20 +43,20 @@ UH::Config::App UH::Factory::Preset::app(UH::Preset::App appPreset) {
  * Return
  *   지정한 preset에 맞게 device 생성에 필요한 정보 반환
  */
-UH::Config::Device UH::Factory::Preset::device(UH::Preset::Device devicePreset) {
-    UH::Config::Device deviceConfig;
+UH::Config::Device UH::Factory::deviceConfig(UH::Preset::Device devicePreset) {
+    using namespace UH;
 
+    Config::Device deviceConfig;
     switch (devicePreset) {
-        case UH::Preset::Device::DEFAULT: {
+        case Preset::Device::DEFAULT: {
             deviceConfig = {
-                .extensions = UH::PresetData::Extension::DEVICE_DEFAULT
+                .extensions      = PresetData::Extension::DEVICE_DEFAULT,
+                .extensionsCount = arrSize(PresetData::Extension::DEVICE_DEFAULT)
             };
-
             break;
         }
 
-        default:
-            break;
+        default: break;
     }
 
     return deviceConfig;
